@@ -1,5 +1,7 @@
 //import 'dart:js';
 import 'dart:io';
+// import 'package:file_picker/file_picker.dart';
+import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,6 +13,9 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 APIService service = new APIService();
+
+int _selectedIndex;
+List<dynamic> projects;
 
 void main() => runApp(MyApp());
 
@@ -102,16 +107,59 @@ class fbShare extends StatelessWidget {
 }
 
 class searchRav extends StatelessWidget {
+  Future<List<dynamic>> search(String search) async {
+    var data = await service.searchProject(search);
+    projects = data["patterns"];
+    return projects;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Search Ravelry'),
       ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {},
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SearchBar<dynamic>(
+            onSearch: search,
+            onItemFound: (dynamic data, int index) {
+              return ListTile(
+                title: Text(data["name"]),
+                subtitle: Text(data["free"] == "true"
+                    ? "Free Item"
+                    : "Item needs to be purchased"),
+                onTap: () {
+                  _selectedIndex = index;
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => displayProjectDetails()));
+                },
+              );
+            },
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class displayProjectDetails extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Add Details to project'),
+      ),
+      body: Center(
+        child: Column(children: <Widget>[
+          Text(projects[_selectedIndex]["name"]),
+          RaisedButton(
+            onPressed: () {},
+            color: Colors.cyan,
+            child: const Text('Add To Project'),
+          ),
+        ]),
       ),
     );
   }
@@ -126,7 +174,18 @@ class addPhotoToProject extends StatelessWidget {
       ),
       body: Center(
         child: RaisedButton(
-          onPressed: () {},
+          onPressed: () async {
+            // FilePickerResult result =
+            //     await FilePicker.platform.pickFiles(allowMultiple: true);
+            //
+            // if (result != null) {
+            //   List<File> files =
+            //       result.paths.map((path) => File(path)).toList();
+            //   int d = 2;
+            // } else {
+            //   // User canceled the picker
+            // }
+          },
         ),
       ),
     );
