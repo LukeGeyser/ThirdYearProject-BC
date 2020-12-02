@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "532035530800",
+    "firebase_url": "https://kintwitmoduletesting.firebaseio.com",
+    "project_id": "kintwitmoduletesting",
+    "storage_bucket": "kintwitmoduletesting.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:532035530800:android:7c6a3497f4070b5c5efdf5",
+        "android_client_info": {
+          "package_name": "com.knitwit.knitwit_feature_module"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "532035530800-3j14b3q5f0k1tg5figblgqfj5fi0k1ev.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXRkR76Cw2B5y3yxFCmq33WKsfY2ZNcFo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "532035530800-3j14b3q5f0k1tg5figblgqfj5fi0k1ev.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
