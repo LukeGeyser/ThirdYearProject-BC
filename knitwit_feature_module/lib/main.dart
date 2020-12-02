@@ -9,7 +9,20 @@ import 'package:image_picker/image_picker.dart';
 
 APIService service = new APIService();
 
-void main() => runApp(MyApp());
+void main() async {
+  runApp(MyApp());
+}
+
+class ImageCapture extends StatelessWidget{
+  createState() => _ImageCaptureState()
+}
+class _ImageCaptureState extends State<ImageCapture>{
+  File _imageFile;
+
+  Future<void> _pickImage(ImageSource) async{
+    File selected = await ImagePicker.pickImage(ImageSource.)
+  }
+}
 
 
 class MyApp extends StatelessWidget {
