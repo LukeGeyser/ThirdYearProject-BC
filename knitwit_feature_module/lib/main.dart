@@ -1,7 +1,6 @@
 //import 'dart:js';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:knitwit_feature_module/APIService.dart';
 import 'package:social_share/social_share.dart';
@@ -9,6 +8,7 @@ import 'package:social_share_plugin/social_share_plugin.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 APIService service = new APIService();
 
@@ -16,16 +16,6 @@ void main() async {
   runApp(MyApp());
 }
 
-class ImageCapture extends StatelessWidget{
-  createState() => _ImageCaptureState()
-}
-class _ImageCaptureState extends State<ImageCapture>{
-  File _imageFile;
-
-  Future<void> _pickImage(ImageSource) async{
-    File selected = await ImagePicker.pickImage(ImageSource.)
-  }
-}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -86,7 +76,7 @@ class MyHomePage extends StatelessWidget {
                       //
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => uploadPhoto()));
+                            builder: (context) => Home()));
                       },
                       child: const Text('Upload Photo',
                           style: TextStyle(fontSize: 20)),
@@ -160,4 +150,74 @@ class uploadPhoto extends StatelessWidget {
       ),
     );
   }
+}
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  String imageUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Upload Image')),
+      body: Column(
+        children: <Widget>[
+          (imageUrl != null)
+              ? Image.network(imageUrl)
+              : Placeholder(fallbackHeight: 200.0,fallbackWidth: double.infinity),
+          SizedBox(height: 20.0,),
+          RaisedButton(
+            child: Text('Upload Image'),
+            color: Colors.lightBlue,
+            onPressed: () => uploadImage(),
+          )
+        ],
+      ),
+    );
+  }
+
+  uploadImage() async {
+
+    final FirebaseStorage _storage = FirebaseStorage.instance;
+    final _picker = ImagePicker();
+    PickedFile image;
+
+
+    //Check Permissions
+    await Permission.photos.request();
+
+    var permissionStatus = await Permission.photos.status;
+
+    if (permissionStatus.isGranted){
+      //Select Image
+      image = await _picker.getImage(source: ImageSource.gallery);
+      var file = File(image.path);
+
+      if (image != null){
+        //Upload to Firebase
+        var snapshot = await _storage.ref()
+            .child('folderName/imageName')
+            .putFile(file);
+
+        var downloadUrl = await snapshot.ref.getDownloadURL();
+
+        setState(() {
+          imageUrl = downloadUrl;
+        });
+      } else {
+        print('No Path Received');
+      }
+
+    } else {
+      print('Grant Permissions and try again');
+    }
+
+
+
+
+  }
+
 }
